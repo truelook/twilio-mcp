@@ -3,16 +3,14 @@ import { join } from 'path';
 import {
   ReadResourceRequest,
   ReadResourceResult,
-  Tool,
 } from '@modelcontextprotocol/sdk/types.js';
 import {
-  API,
   OpenAPIMCPServer,
   ToolFilters,
 } from '@twilio-alpha/openapi-mcp-server';
 
 import { Credentials } from '@app/types';
-import { loadAdditionalTools } from '@app/tools';
+import loadAdditionalTools from '@app/tools';
 
 type Configuration = {
   server: {
@@ -26,8 +24,6 @@ type Configuration = {
 const ROOT_DIR = join(__dirname, '..');
 
 export default class SegmentOpenAPIMCPServer extends OpenAPIMCPServer {
-  private readonly config: Configuration;
-
   constructor(config: Configuration) {
     super({
       server: {
@@ -46,7 +42,6 @@ export default class SegmentOpenAPIMCPServer extends OpenAPIMCPServer {
         token: config.credentials.apiToken,
       },
     });
-    this.config = config;
   }
 
   /**
@@ -62,10 +57,11 @@ export default class SegmentOpenAPIMCPServer extends OpenAPIMCPServer {
    * @param request
    * @returns
    */
+  // eslint-disable-next-line class-methods-use-this
   protected async handleReadResource(
     request: ReadResourceRequest,
   ): Promise<ReadResourceResult> {
-    const { uri, name } = request.params;
+    const { name } = request.params;
 
     throw new Error(`Resource ${name} not found`);
   }

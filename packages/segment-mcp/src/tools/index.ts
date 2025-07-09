@@ -7,6 +7,7 @@ type Additional = {
 };
 
 export default function loadAdditionalTools(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   filters?: ToolFilters,
 ): Map<string, Additional> {
   const tools: Map<string, Additional> = new Map();

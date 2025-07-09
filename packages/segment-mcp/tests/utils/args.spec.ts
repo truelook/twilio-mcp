@@ -17,11 +17,7 @@ describe('parsedArgs', () => {
   });
 
   it('should parse basic API token', async () => {
-    const args = [
-      'node',
-      'script.js',
-      `--token=${validApiToken}`,
-    ];
+    const args = ['node', 'script.js', `--token=${validApiToken}`];
 
     const result = await parsedArgs(args);
 
@@ -33,12 +29,7 @@ describe('parsedArgs', () => {
   });
 
   it('should parse API token using -t alias', async () => {
-    const args = [
-      'node',
-      'script.js',
-      '-t',
-      validApiToken,
-    ];
+    const args = ['node', 'script.js', '-t', validApiToken];
 
     const result = await parsedArgs(args);
 
@@ -104,10 +95,7 @@ describe('parsedArgs', () => {
   });
 
   it('should call process.exit if token is missing', async () => {
-    const args = [
-      'node',
-      'script.js',
-    ];
+    const args = ['node', 'script.js'];
 
     try {
       await parsedArgs(args);
@@ -119,11 +107,7 @@ describe('parsedArgs', () => {
   });
 
   it('should call process.exit if token is too short', async () => {
-    const args = [
-      'node',
-      'script.js',
-      '--token=short',
-    ];
+    const args = ['node', 'script.js', '--token=short'];
 
     try {
       await parsedArgs(args);

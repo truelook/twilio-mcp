@@ -25,7 +25,7 @@ describe('SegmentOpenAPIMCPServer', () => {
 
   it('should throw error for any resource request', async () => {
     const server = new SegmentOpenAPIMCPServer(mockConfig);
-    
+
     const request = {
       params: {
         uri: 'text://unknown',
@@ -33,6 +33,8 @@ describe('SegmentOpenAPIMCPServer', () => {
       },
     };
 
-    await expect(server['handleReadResource'](request)).rejects.toThrow('Resource Unknown Resource not found');
+    await expect(server.handleReadResource(request)).rejects.toThrow(
+      'Resource Unknown Resource not found',
+    );
   });
 });
