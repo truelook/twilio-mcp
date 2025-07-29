@@ -5,6 +5,7 @@ import {
   ReadResourceResult,
 } from '@modelcontextprotocol/sdk/types.js';
 import {
+  API,
   OpenAPIMCPServer,
   ToolFilters,
 } from '@twilio-alpha/openapi-mcp-server';
@@ -19,11 +20,14 @@ type Configuration = {
   };
   filters?: ToolFilters;
   credentials: Credentials;
+  baseUrl?: string;
 };
 
 const ROOT_DIR = join(__dirname, '..');
 
 export default class SegmentOpenAPIMCPServer extends OpenAPIMCPServer {
+  private readonly baseUrl: string;
+
   constructor(config: Configuration) {
     super({
       server: {
@@ -42,6 +46,8 @@ export default class SegmentOpenAPIMCPServer extends OpenAPIMCPServer {
         token: config.credentials.apiToken,
       },
     });
+    
+    this.baseUrl = config.baseUrl || 'https://api.segmentapis.com';
   }
 
   /**
@@ -50,6 +56,31 @@ export default class SegmentOpenAPIMCPServer extends OpenAPIMCPServer {
    */
   private static systemPrompt(): string {
     return `You are an agent to call Segment Public APIs. You have access to manage Segment Workspaces and resources including Sources, Destinations, Warehouses, Tracking Plans, and the Segment Destinations and Sources Catalogs.`;
+  }
+
+  /**
+   * Override makeRequest to prepend base URL for relative paths
+   * @param id
+   * @param api
+   * @param body
+   * @protected
+   */
+  protected async makeRequest(
+    id: string,
+    api: API,
+    body?: Record<string, unknown>,
+  ) {
+    // If the API path is relative, prepend the base URL
+    const url = api.path.startsWith('http')
+      ? api.path
+      : `${this.baseUrl}${api.path.startsWith('/') ? '' : '/'}${api.path}`;
+
+    const modifiedApi = {
+      ...api,
+      path: url,
+    };
+
+    return super.makeRequest(id, modifiedApi, body);
   }
 
   /**

@@ -5,6 +5,7 @@ interface ParsedArgs {
   services: string[];
   tags: string[];
   apiToken?: string;
+  baseUrl?: string;
 }
 
 const sanitizeArgs = (args: string): string[] => {
@@ -22,11 +23,12 @@ const parsedArgs = async (argv: string[]): Promise<ParsedArgs> => {
       t: 'token',
       s: 'services',
       g: 'tags',
+      u: 'baseUrl',
     },
-    string: ['token', 'services', 'tags'],
+    string: ['token', 'services', 'tags', 'baseUrl'],
   });
 
-  const { services: sArgs, token: apiToken, tags: tArgs } = parsed;
+  const { services: sArgs, token: apiToken, tags: tArgs, baseUrl } = parsed;
 
   if (!apiToken) {
     logger.error('Error: API token is required. Use --token or -t flag.');
@@ -46,6 +48,7 @@ const parsedArgs = async (argv: string[]): Promise<ParsedArgs> => {
     services,
     tags,
     apiToken,
+    baseUrl,
   };
 };
 

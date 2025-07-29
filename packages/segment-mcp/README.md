@@ -28,6 +28,12 @@ segment-mcp-server --token <your-token> --services=workspaces,sources,destinatio
 segment-mcp-server --token <your-token> --tags=Analytics,Marketing
 ```
 
+### With Custom Base URL (EU Region)
+
+```bash
+segment-mcp-server --token <your-token> --baseUrl=https://eu1.api.segmentapis.com
+```
+
 ## Configuration
 
 ### Getting Your API Token
@@ -45,6 +51,7 @@ segment-mcp-server --token <your-token> --tags=Analytics,Marketing
 | `--token` | `-t` | Your Segment API token | Yes |
 | `--services` | `-s` | Filter by specific services (comma-separated) | No |
 | `--tags` | `-g` | Filter by specific tags (comma-separated) | No |
+| `--baseUrl` | `-u` | Base URL for Segment API (defaults to US region) | No |
 
 ### Environment
 

@@ -6,7 +6,7 @@ import { args, type AccountCredentials } from '@app/utils';
 
 export default async function main() {
   let credentials: AccountCredentials | null;
-  const { services, apiToken, tags } = await args(process.argv);
+  const { services, apiToken, tags, baseUrl } = await args(process.argv);
 
   if (apiToken) {
     credentials = { apiToken };
@@ -27,6 +27,7 @@ export default async function main() {
     credentials: {
       apiToken: credentials.apiToken,
     },
+    baseUrl,
   });
 
   const transport = new StdioServerTransport();
