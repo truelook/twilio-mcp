@@ -2,7 +2,32 @@
 
 A Model Context Protocol server that exposes all of Segment Public APIs, enabling AI models to manage Segment Workspaces and resources including Sources, Destinations, Warehouses, Tracking Plans, and the Segment Destinations and Sources Catalogs.
 
-## Installation
+## Local Setup (stdio)
+
+```
+cd packages/segment-mcp
+npm run build
+npm run start -- --token <your-token>
+```
+
+or if you want to setup with Claude (`claude_desktop_config.json`):
+
+```
+{
+  "mcpServers": {
+    "segment": {
+      "command": "(node path, e.g., /Users/.../.nvm/versions/node/v20.18.0/bin/node)",
+      "args": [
+        "<full path>/twilio-labs/mcp/packages/segment-mcp/build/index.js",
+        "--token",
+        "<your_token>"
+      ]
+    }
+  }
+}
+```
+
+## Installation (Currently not on npm, so ignore)
 
 ```bash
 npm install @twilio-alpha/segment-mcp
@@ -46,16 +71,17 @@ segment-mcp-server --token <your-token> --baseUrl=https://eu1.api.segmentapis.co
 
 ### Command Line Options
 
-| Option | Alias | Description | Required |
-|--------|-------|-------------|----------|
-| `--token` | `-t` | Your Segment API token | Yes |
-| `--services` | `-s` | Filter by specific services (comma-separated) | No |
-| `--tags` | `-g` | Filter by specific tags (comma-separated) | No |
-| `--baseUrl` | `-u` | Base URL for Segment API (defaults to US region) | No |
+| Option       | Alias | Description                                      | Required |
+| ------------ | ----- | ------------------------------------------------ | -------- |
+| `--token`    | `-t`  | Your Segment API token                           | Yes      |
+| `--services` | `-s`  | Filter by specific services (comma-separated)    | No       |
+| `--tags`     | `-g`  | Filter by specific tags (comma-separated)        | No       |
+| `--baseUrl`  | `-u`  | Base URL for Segment API (defaults to US region) | No       |
 
 ### Environment
 
 The server uses the appropriate Segment API endpoint based on your workspace:
+
 - **US Workspaces**: `https://api.segmentapis.com`
 - **EU Workspaces**: `https://eu1.api.segmentapis.com`
 
