@@ -40,6 +40,26 @@ const trimSlashes = (str: string) => {
   return str.replace(/^\/+|\/+$/g, '');
 };
 
+// MCP hosts (e.g. opencode) prefix tool names with "{mcpName}_".
+// AWS Bedrock enforces a 64-char max on tool names.
+// Leave room for up to a 9-char prefix (e.g. "twilio_").
+const MAX_TOOL_NAME_LENGTH = 55;
+
+const shortHash = (str: string): string => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash + char) | 0;
+  }
+  return Math.abs(hash).toString(36).slice(0, 5);
+};
+
+const truncateToolName = (name: string): string => {
+  if (name.length <= MAX_TOOL_NAME_LENGTH) return name;
+  const suffix = shortHash(name);
+  return name.slice(0, MAX_TOOL_NAME_LENGTH - suffix.length - 1) + '_' + suffix;
+};
+
 /**
  * Sanitize property keys to match the pattern required by LLM tool-use APIs.
  * Twilio's OpenAPI spec includes parameter names with angle brackets
@@ -133,10 +153,11 @@ export default function loadTools(specs: OpenAPISpec[], filters?: ToolFilters) {
             const operation = op as OpenAPIV3.OperationObject;
             return (operation.tags ?? []).some((tag) => tags.includes(tag));
           })
-          .forEach(([method, op]) => {
+           .forEach(([method, op]) => {
             const operation = op as OpenAPIV3.OperationObject;
 
-            const name = `${spec.name}--${operation.operationId}`;
+            const rawName = `${spec.name}--${operation.operationId}`;
+            const name = truncateToolName(rawName);
             const toolDescription =
               operation.description ||
               `Make a ${method.toUpperCase()} request to ${path}`;

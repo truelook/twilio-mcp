@@ -39,7 +39,12 @@ export default async function readSpecs(
         fullPath,
       )) as OpenAPIV3.Document;
 
+      // Strip redundant "twilio_" prefix from service name since the MCP host
+      // already prefixes tool names with the MCP server name (e.g. "twilio_").
+      // This saves 6+ chars toward the 64-char tool name limit enforced by
+      // providers like AWS Bedrock.
       const name = service
+        .replace(/^twilio_/i, '')
         .split('_')
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
         .join('');
